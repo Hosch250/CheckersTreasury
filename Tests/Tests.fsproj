@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net471</TargetFramework>
+    <DebugType>portable</DebugType>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="AmericanCheckersAITests.fs" />
+    <Compile Include="AmericanCheckersTests.fs" />
+    <Compile Include="BoardTests.fs" />
+    <Compile Include="GameControllerTests.fs" />
+    <Compile Include="MinimaxTests.fs" />
+    <Compile Include="PieceTests.fs" />
+    <Compile Include="PoolCheckersAITests.fs" />
+    <Compile Include="PoolCheckersTests.fs" />
+    <Compile Include="PortableDraughtsNotationTests.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="xunit" Version="2.3.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CheckersTreasury\CheckersTreasury.fsproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="FSharp.Core" Version="4.3.4" />
+  </ItemGroup>
+</Project>

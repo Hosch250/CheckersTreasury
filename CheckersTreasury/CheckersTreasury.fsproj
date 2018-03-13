@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net471</TargetFramework>
+    <DebugType>portable</DebugType>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.fs" />
+    <Compile Include="Checkers.fs" />
+    <Compile Include="Piece.fs" />
+    <Compile Include="Board.fs" />
+    <Compile Include="FSharpExtensions.fs" />
+    <Compile Include="Variants\AmericanCheckers.fs" />
+    <Compile Include="Variants\PoolCheckers.fs" />
+    <Compile Include="AIs\AmericanCheckersAI.fs" />
+    <Compile Include="AIs\PoolCheckersAI.fs" />
+    <Compile Include="GameVariant.fs" />
+    <Compile Include="GameController.fs" />
+    <Compile Include="PortableDraughtsNotation.fs" />
+    <Compile Include="Minimax.fs" />
+    <Compile Include="PublicAPI.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="FSharp.Core" Version="4.3.4" />
+  </ItemGroup>
+</Project>
