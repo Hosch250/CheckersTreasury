@@ -99,7 +99,7 @@ let ``Moving records move history: American Checkers white hop``() =
             [None; None; None; None; None; None; None; None];
         ];
 
-    let controller = { Variant = GameVariant.GameVariant.AmericanCheckers; Board = board; CurrentPlayer = White; InitialPosition = ""; MoveHistory = [{MoveNumber = 1; BlackMove = { Move = [1; 10]; ResultingFen = ""; DisplayString = "1x10"; PieceTypeMoved = Some PieceType.King; IsJump = Some true }; WhiteMove = None }]; CurrentCoord = None }
+    let controller = { Variant = GameVariant.GameVariant.AmericanCheckers; Board = board; CurrentPlayer = White; InitialPosition = ""; MoveHistory = [{MoveNumber = 1; BlackMove = { Move = [1; 10]; ResultingFen = ""; DisplayString = "1x10"; PieceTypeMoved = Some PieceType.King; Player = Some Black; IsJump = Some true }; WhiteMove = None }]; CurrentCoord = None }
     let newController = movePiece { Row = 3; Column = 4 } { Row = 1; Column = 2 } controller
     let lastMove = (List.last newController.Value.MoveHistory)
 
@@ -139,7 +139,7 @@ let ``Moving records move history: Pool Checkers white hop``() =
             [None; None; None; None; None; None; None; None];
         ];
 
-    let controller = { Variant = GameVariant.GameVariant.PoolCheckers; Board = board; CurrentPlayer = White; InitialPosition = ""; MoveHistory = [{MoveNumber = 1; BlackMove = { Move = [1; 10]; ResultingFen = ""; DisplayString = "1x10"; PieceTypeMoved = Some PieceType.King; IsJump = Some true }; WhiteMove = None }]; CurrentCoord = None }
+    let controller = { Variant = GameVariant.GameVariant.PoolCheckers; Board = board; CurrentPlayer = White; InitialPosition = ""; MoveHistory = [{MoveNumber = 1; BlackMove = { Move = [1; 10]; ResultingFen = ""; DisplayString = "1x10"; PieceTypeMoved = Some PieceType.King; Player = Some Black; IsJump = Some true }; WhiteMove = None }]; CurrentCoord = None }
     let newController = movePiece { Row = 3; Column = 4 } { Row = 1; Column = 2 } controller
     let lastMove = (List.last newController.Value.MoveHistory)
 

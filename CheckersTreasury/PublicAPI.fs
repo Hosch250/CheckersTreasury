@@ -48,6 +48,7 @@ let internal getPdnForMove gameController move boardFen originalBoard =
                 ResultingFen = boardFen;
                 DisplayString = getDisplayString gameController.Variant.apiMembers pdnMove move originalBoard;
                 PieceTypeMoved = Some piece.Value.PieceType;
+                Player = Some Black;
                 IsJump = Some (gameController.Variant.apiMembers.isJump move originalBoard)
             }
         | White -> (List.last gameHistory).BlackMove
@@ -62,6 +63,7 @@ let internal getPdnForMove gameController move boardFen originalBoard =
                     ResultingFen = boardFen;
                     DisplayString = getDisplayString gameController.Variant.apiMembers pdnMove move originalBoard;
                     PieceTypeMoved = Some piece.Value.PieceType;
+                    Player = Some White;
                     IsJump = Some (gameController.Variant.apiMembers.isJump move originalBoard)
                 }
 
@@ -86,6 +88,7 @@ let internal getPdnForContinuedMove gameController move boardFen originalBoard =
                 ResultingFen = boardFen;
                 DisplayString = getDisplayString gameController.Variant.apiMembers newPdnMove move originalBoard;
                 PieceTypeMoved = Some piece.Value.PieceType;
+                Player = Some Black;
                 IsJump = Some (gameController.Variant.apiMembers.isJump move originalBoard)
             }
         | White -> lastMovePdn.BlackMove
@@ -101,6 +104,7 @@ let internal getPdnForContinuedMove gameController move boardFen originalBoard =
                     ResultingFen = boardFen;
                     DisplayString = getDisplayString gameController.Variant.apiMembers newPdnMove move originalBoard;
                     PieceTypeMoved = Some piece.Value.PieceType;
+                    Player = Some White;
                     IsJump = Some (gameController.Variant.apiMembers.isJump move originalBoard)
                 }
 
