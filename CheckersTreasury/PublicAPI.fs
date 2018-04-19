@@ -43,7 +43,7 @@ let internal getPdnForMove gameController move boardFen originalBoard =
     let blackMove =
         match gameController.CurrentPlayer with
         | Black ->
-            {
+            Some {
                 Move = pdnMove;
                 ResultingFen = boardFen;
                 DisplayString = getDisplayString gameController.Variant.apiMembers pdnMove move originalBoard;
@@ -51,11 +51,17 @@ let internal getPdnForMove gameController move boardFen originalBoard =
                 Player = Some Black;
                 IsJump = Some (gameController.Variant.apiMembers.isJump move originalBoard)
             }
-        | White -> (List.last gameHistory).BlackMove
+        | White ->
+            match gameHistory with
+            | [] -> None
+            | _ -> (List.last gameHistory).BlackMove
 
     let whiteMove =
         match gameController.CurrentPlayer with
-        | Black -> None
+        | Black ->
+            match gameHistory with
+            | [] -> None
+            | _ -> (List.last gameHistory).WhiteMove
         | White ->
             Some 
                 {
@@ -82,8 +88,8 @@ let internal getPdnForContinuedMove gameController move boardFen originalBoard =
     let blackMove =
         match gameController.CurrentPlayer with
         | Black ->
-            let newPdnMove = lastMovePdn.BlackMove.Move @ pdnMove.Tail
-            {
+            let newPdnMove = lastMovePdn.BlackMove.Value.Move @ pdnMove.Tail
+            Some {
                 Move = newPdnMove;
                 ResultingFen = boardFen;
                 DisplayString = getDisplayString gameController.Variant.apiMembers newPdnMove move originalBoard;
@@ -95,7 +101,7 @@ let internal getPdnForContinuedMove gameController move boardFen originalBoard =
 
     let whiteMove =
         match gameController.CurrentPlayer with
-        | Black -> None
+        | Black -> lastMovePdn.WhiteMove
         | White ->
             let newPdnMove = lastMovePdn.WhiteMove.Value.Move @ pdnMove.Tail
             Some
@@ -178,11 +184,19 @@ let getMove searchDepth gameController (cancellationToken :System.Threading.Canc
 let getValidMoves gameController =
     gameController.Variant.aiMembers.calculateMoves gameController.CurrentPlayer gameController.Board
 
-let takeBackMove gameController =
+let takeBackMove (gameController :GameController) =
+    let whiteMoves =
+        List.map (fun (item :PdnTurn) -> item.WhiteMove.Value) (List.filter (fun (item :PdnTurn) -> item.WhiteMove.IsSome) gameController.MoveHistory)
+        
+    let blackMoves =
+        List.map (fun (item :PdnTurn) -> item.BlackMove.Value) (List.filter (fun (item :PdnTurn) -> item.BlackMove.IsSome) gameController.MoveHistory)
+    
+    System.Diagnostics.Debug.WriteLine(whiteMoves.Length)
+
     let fen =
-        match gameController.CurrentPlayer, gameController.MoveHistory.Length with
-        | Black, l when l >= 1 -> (List.last gameController.MoveHistory).BlackMove.ResultingFen
-        | White, l when l >= 2 ->(gameController.MoveHistory.[gameController.MoveHistory.Length - 2]).WhiteMove.Value.ResultingFen
+        match gameController.CurrentPlayer with
+        | Black when blackMoves.Length > 0 -> (blackMoves.[blackMoves.Length - 1]).ResultingFen
+        | White when whiteMoves.Length > 0 -> (whiteMoves.[whiteMoves.Length - 1]).ResultingFen
         | _ -> gameController.InitialPosition
 
     let newMoveHistory =

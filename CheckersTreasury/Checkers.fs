@@ -12,7 +12,7 @@ let offset c1 c2 =
 
 type Move = Coord List
 type PdnMove = { Move :int List; ResultingFen :string; DisplayString :string; PieceTypeMoved :PieceType Option; Player :Player Option; IsJump :bool Option }
-type PdnTurn = { MoveNumber :int; BlackMove :PdnMove; WhiteMove :PdnMove Option }
+type PdnTurn = { MoveNumber :int; BlackMove :PdnMove Option; WhiteMove :PdnMove Option }
 
 type internal MoveTree = { Move :Move; Children :Option<List<MoveTree>> }
 type internal AlphaBetaMove = { Alpha :float Option; Beta :float Option; Move :Move }

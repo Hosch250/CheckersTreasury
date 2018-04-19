@@ -51,7 +51,7 @@ let ``Create controller from FEN string: white move does not crash``() =
 
     let move = controller.Value.MoveHistory.Head
     
-    Assert.Equal("…", move.BlackMove.DisplayString)
+    Assert.Equal(None, move.BlackMove)
     Assert.Equal("24-20", move.WhiteMove.Value.DisplayString)
 
 [<Fact>]
