@@ -32,7 +32,8 @@ let internal getDisplayString variant (pdnTurn :int List) (move :Move) (board :B
 let internal getPdnForMove gameController move boardFen originalBoard =
     let gameHistory = gameController.MoveHistory
     let pdnMove = (List.map (fun item -> (square item gameController.Variant.pdnMembers.pdnBoard).Value) move)
-
+    
+    let lastTurn = List.tryLast gameHistory
     let moveNumber =
         match gameController.CurrentPlayer with
         | Black -> gameHistory.Length + 1
@@ -52,16 +53,16 @@ let internal getPdnForMove gameController move boardFen originalBoard =
                 IsJump = Some (gameController.Variant.apiMembers.isJump move originalBoard)
             }
         | White ->
-            match gameHistory with
-            | [] -> None
-            | _ -> (List.last gameHistory).BlackMove
+            match lastTurn.IsSome && lastTurn.Value.MoveNumber = moveNumber with
+            | true -> (List.last gameHistory).BlackMove
+            | false -> None
 
     let whiteMove =
         match gameController.CurrentPlayer with
         | Black ->
-            match gameHistory with
-            | [] -> None
-            | _ -> (List.last gameHistory).WhiteMove
+            match lastTurn.IsSome && lastTurn.Value.MoveNumber = moveNumber with
+            | true -> (List.last gameHistory).WhiteMove
+            | false -> None
         | White ->
             Some 
                 {
@@ -198,15 +199,24 @@ let takeBackMove (gameController :GameController) =
         | Black when blackMoves.Length > 0 -> (blackMoves.[blackMoves.Length - 1]).ResultingFen
         | White when whiteMoves.Length > 0 -> (whiteMoves.[whiteMoves.Length - 1]).ResultingFen
         | _ -> gameController.InitialPosition
+        
+    let foo = List.tryLast gameController.MoveHistory
 
     let newMoveHistory =
-        match gameController.CurrentPlayer, gameController.MoveHistory with
-        | White, _ -> List.truncate (gameController.MoveHistory.Length - 1) gameController.MoveHistory
-        | Black, [] -> []
-        | Black, _ ->
-            let lastMove = (List.last gameController.MoveHistory)
-            let newLastMove = {lastMove with WhiteMove = None}
-            List.truncate (gameController.MoveHistory.Length - 1) gameController.MoveHistory @ [newLastMove]
+        match gameController.MoveHistory with
+        | [] -> []
+        | _ ->
+            let lastTurn = List.last gameController.MoveHistory
+            match lastTurn.BlackMove, lastTurn.WhiteMove with
+            | Some _, Some _ -> List.truncate (gameController.MoveHistory.Length - 1) gameController.MoveHistory
+            | _ when blackMoves.IsEmpty || whiteMoves.IsEmpty -> []
+            | _ ->
+                let lastMove = (List.last gameController.MoveHistory)
+                let newLastMove =
+                    match gameController.CurrentPlayer with
+                    | Black -> {lastMove with WhiteMove = None}
+                    | White -> {lastMove with BlackMove = None}
+                List.truncate (gameController.MoveHistory.Length - 1) gameController.MoveHistory @ [newLastMove]       
     
     {(controllerFromFen gameController.Variant fen) with MoveHistory = newMoveHistory}
 
