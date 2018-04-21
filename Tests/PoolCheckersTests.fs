@@ -945,3 +945,12 @@ let ``Winning player returns player``() =
 [<Fact>]
 let ``Winning player returns None``() =
     Assert.True((winningPlayer Board.defaultBoard Player.Black).IsNone)
+
+[<Fact>]
+let ``Winning player returns player when neither player can move``() =
+    let fen = "[FEN \"W:W14,17,18,20,21,22,23,24,25,26,28,32:B5,6,7,8,9,10,11,12,13,15,16,19\"]"
+    let controller = controllerFromFen GameVariant.PoolCheckers fen
+    
+    let board = Checkers.Variants.PoolCheckers.movePiece {Row = 7; Column = 6} {Row = 6; Column = 5} controller.Board
+
+    Assert.Equal(White, (winningPlayer board.Value Player.White).Value)
