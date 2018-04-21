@@ -6,7 +6,7 @@ type AiMembers =
     {
         uncheckedMoveSequence :Coord seq -> Board -> Board
         calculateMoves :Player -> Board -> Move List
-        winningPlayer :Board -> Player Option
+        winningPlayer :Board -> Player -> Player Option
         calculateWeightDifference :Board -> float
     }
 with
@@ -48,7 +48,7 @@ type ApiMembers =
         movePiece :Coord -> Coord -> Board -> Board Option
         moveSequence :Coord seq -> Board Option -> Board Option
         isJump :Move -> Board -> bool
-        winningPlayer :Board -> Player Option
+        winningPlayer :Board -> Player -> Player Option
         isDrawn : string -> PdnTurn list -> bool
         playerTurnEnds :Move -> Board -> Board -> bool
     }

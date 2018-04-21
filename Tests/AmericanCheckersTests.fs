@@ -844,8 +844,8 @@ let ``Winning player returns player``() =
             [None; None; None; None; None; None; None; None];
         ];
 
-    Assert.Equal(Black, (winningPlayer board).Value)
+    Assert.Equal(Black, (winningPlayer board Player.Black).Value)
 
 [<Fact>]
 let ``Winning player returns None``() =
-    Assert.True((winningPlayer Board.defaultBoard).IsNone)
+    Assert.True((winningPlayer Board.defaultBoard Player.Black).IsNone)

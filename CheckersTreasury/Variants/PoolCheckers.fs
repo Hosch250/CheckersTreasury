@@ -244,10 +244,11 @@ let internal moveAvailable (board :Board) player =
 
     loop <| Some {Row = 0; Column = 0}
 
-let winningPlayer (board :Board) =
+let winningPlayer (board :Board) currentPlayer =
     match (moveAvailable board) with
     | x when not <| x White -> Some Black
     | x when not <| x Black -> Some White
+    | x when not <| x Black && not <| x White -> Some currentPlayer
     | _ -> None
 
 let playerHasOneKing (fen :string) =

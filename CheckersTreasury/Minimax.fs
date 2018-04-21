@@ -46,7 +46,7 @@ let rec minimax player currentSearchDepth searchDepth alpha beta (board :Board) 
     match cancellationToken.IsCancellationRequested with
     | true -> { Alpha = None; Beta = None; Move = [] }
     | _ ->
-        match currentSearchDepth = 0 || (aiMembers.winningPlayer board).IsSome with
+        match currentSearchDepth = 0 || (aiMembers.winningPlayer board player).IsSome with
         | true ->
             let weightDifference = Some <| aiMembers.calculateWeightDifference board
             let newAlpha = 
