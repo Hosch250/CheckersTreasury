@@ -191,16 +191,12 @@ let takeBackMove (gameController :GameController) =
         
     let blackMoves =
         List.map (fun (item :PdnTurn) -> item.BlackMove.Value) (List.filter (fun (item :PdnTurn) -> item.BlackMove.IsSome) gameController.MoveHistory)
-    
-    System.Diagnostics.Debug.WriteLine(whiteMoves.Length)
 
     let fen =
         match gameController.CurrentPlayer with
         | Black when blackMoves.Length > 0 -> (blackMoves.[blackMoves.Length - 1]).ResultingFen
         | White when whiteMoves.Length > 0 -> (whiteMoves.[whiteMoves.Length - 1]).ResultingFen
         | _ -> gameController.InitialPosition
-        
-    let foo = List.tryLast gameController.MoveHistory
 
     let newMoveHistory =
         match gameController.MoveHistory with
@@ -220,11 +216,20 @@ let takeBackMove (gameController :GameController) =
     
     {(controllerFromFen gameController.Variant fen) with MoveHistory = newMoveHistory}
 
-let winningPlayer gameController =
-    gameController.Variant.apiMembers.winningPlayer gameController.Board gameController.CurrentPlayer
+let winningPlayer gameController player =
+    gameController.Variant.apiMembers.winningPlayer gameController.Board player
 
-let isWon controller =
-    let player = winningPlayer controller
+let isWon controller =        
+    let lastTurn = List.tryLast controller.MoveHistory
+
+    let lastPlayer =
+        match lastTurn with
+        | Some turn when turn.BlackMove = None -> Some White
+        | Some turn when turn.WhiteMove = None -> Some Black
+        | Some _ -> Some controller.Variant.apiMembers.startingPlayer
+        | None -> None
+
+    let player = winningPlayer controller lastPlayer
     player.IsSome &&
     player.Value <> controller.CurrentPlayer
 

@@ -845,11 +845,11 @@ let ``Winning player returns player``() =
             [None; None; None; None; None; None; None; None];
         ];
 
-    Assert.Equal(Black, (winningPlayer board Player.Black).Value)
+    Assert.Equal(Black, (winningPlayer board None).Value)
 
 [<Fact>]
 let ``Winning player returns None``() =
-    Assert.True((winningPlayer Board.defaultBoard Player.Black).IsNone)
+    Assert.True((winningPlayer Board.defaultBoard None).IsNone)
 
 [<Fact>]
 let ``Winning player returns player when neither player can move``() =
@@ -858,4 +858,4 @@ let ``Winning player returns player when neither player can move``() =
     
     let board = Checkers.Variants.PoolCheckers.movePiece {Row = 7; Column = 6} {Row = 6; Column = 5} controller.Board
 
-    Assert.Equal(White, (winningPlayer board.Value Player.White).Value)
+    Assert.Equal(White, (winningPlayer board.Value (Some White)).Value)

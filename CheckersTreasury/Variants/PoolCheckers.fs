@@ -10,6 +10,8 @@ let Rows = 7
     
 [<Literal>]
 let Columns = 7
+    
+let StartingPlayer = Black
 
 let internal pdnBoard =
     array2D [
@@ -244,9 +246,9 @@ let internal moveAvailable (board :Board) player =
 
     loop <| Some {Row = 0; Column = 0}
 
-let winningPlayer (board :Board) currentPlayer =
+let winningPlayer (board :Board) (currentPlayer :Player Option) =
     match (moveAvailable board) with
-    | x when not <| x Black && not <| x White -> Some currentPlayer
+    | x when not <| x Black && not <| x White -> currentPlayer
     | x when not <| x White -> Some Black
     | x when not <| x Black -> Some White
     | _ -> None

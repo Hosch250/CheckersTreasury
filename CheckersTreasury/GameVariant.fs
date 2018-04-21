@@ -6,7 +6,7 @@ type AiMembers =
     {
         uncheckedMoveSequence :Coord seq -> Board -> Board
         calculateMoves :Player -> Board -> Move List
-        winningPlayer :Board -> Player -> Player Option
+        winningPlayer :Board -> Player Option -> Player Option
         calculateWeightDifference :Board -> float
     }
 with
@@ -48,7 +48,8 @@ type ApiMembers =
         movePiece :Coord -> Coord -> Board -> Board Option
         moveSequence :Coord seq -> Board Option -> Board Option
         isJump :Move -> Board -> bool
-        winningPlayer :Board -> Player -> Player Option
+        startingPlayer :Player
+        winningPlayer :Board -> Player Option -> Player Option
         isDrawn : string -> PdnTurn list -> bool
         playerTurnEnds :Move -> Board -> Board -> bool
     }
@@ -59,6 +60,7 @@ with
             movePiece = Variants.AmericanCheckers.movePiece
             moveSequence = Variants.AmericanCheckers.moveSequence
             isJump = Variants.AmericanCheckers.isJump
+            startingPlayer = Variants.AmericanCheckers.StartingPlayer
             winningPlayer = Variants.AmericanCheckers.winningPlayer
             isDrawn = Variants.AmericanCheckers.isDrawn
             playerTurnEnds = Variants.AmericanCheckers.playerTurnEnds
@@ -69,6 +71,7 @@ with
             movePiece = Variants.PoolCheckers.movePiece
             moveSequence = Variants.PoolCheckers.moveSequence
             isJump = Variants.PoolCheckers.isJump
+            startingPlayer = Variants.PoolCheckers.StartingPlayer
             winningPlayer = Variants.PoolCheckers.winningPlayer
             isDrawn = Variants.PoolCheckers.isDrawn
             playerTurnEnds = Variants.PoolCheckers.playerTurnEnds
