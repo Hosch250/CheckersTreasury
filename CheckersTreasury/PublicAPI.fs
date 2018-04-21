@@ -216,10 +216,7 @@ let takeBackMove (gameController :GameController) =
     
     {(controllerFromFen gameController.Variant fen) with MoveHistory = newMoveHistory}
 
-let winningPlayer gameController player =
-    gameController.Variant.apiMembers.winningPlayer gameController.Board player
-
-let isWon controller =        
+let winningPlayer controller =
     let lastTurn = List.tryLast controller.MoveHistory
 
     let lastPlayer =
@@ -229,7 +226,10 @@ let isWon controller =
         | Some _ -> Some controller.Variant.apiMembers.startingPlayer
         | None -> None
 
-    let player = winningPlayer controller lastPlayer
+    controller.Variant.apiMembers.winningPlayer controller.Board lastPlayer
+
+let isWon controller =
+    let player = winningPlayer controller
     player.IsSome &&
     player.Value <> controller.CurrentPlayer
 
