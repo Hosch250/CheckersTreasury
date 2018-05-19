@@ -13,7 +13,14 @@ with
     static member AmericanCheckers =
         {
             uncheckedMoveSequence = Variants.AmericanCheckers.uncheckedMoveSequence
-            calculateMoves = AIs.AmericanCheckersAI.calculateMoves
+            calculateMoves = AIs.AmericanCheckersAI.calculateMoves true
+            winningPlayer = Variants.AmericanCheckers.winningPlayer
+            calculateWeightDifference = AIs.AmericanCheckersAI.calculateWeightDifference
+        }
+    static member AmericanCheckersOptionalJump =
+        {
+            uncheckedMoveSequence = Variants.AmericanCheckers.uncheckedMoveSequence
+            calculateMoves = AIs.AmericanCheckersAI.calculateMoves false
             winningPlayer = Variants.AmericanCheckers.winningPlayer
             calculateWeightDifference = AIs.AmericanCheckersAI.calculateWeightDifference
         }
@@ -32,6 +39,11 @@ type PdnMembers =
     }
 with
     static member AmericanCheckers =
+        {
+            pdnBoard = Variants.AmericanCheckers.pdnBoard
+            pdnBoardCoords = Variants.AmericanCheckers.pdnBoardCoords
+        }
+    static member AmericanCheckersOptionalJump =
         {
             pdnBoard = Variants.AmericanCheckers.pdnBoard
             pdnBoardCoords = Variants.AmericanCheckers.pdnBoardCoords
@@ -56,9 +68,20 @@ type ApiMembers =
 with
     static member AmericanCheckers =
         {
-            isValidMove = Variants.AmericanCheckers.isValidMove
-            movePiece = Variants.AmericanCheckers.movePiece
-            moveSequence = Variants.AmericanCheckers.moveSequence
+            isValidMove = Variants.AmericanCheckers.isValidMove true
+            movePiece = Variants.AmericanCheckers.movePiece true
+            moveSequence = Variants.AmericanCheckers.moveSequence true
+            isJump = Variants.AmericanCheckers.isJump
+            startingPlayer = Variants.AmericanCheckers.StartingPlayer
+            winningPlayer = Variants.AmericanCheckers.winningPlayer
+            isDrawn = Variants.AmericanCheckers.isDrawn
+            playerTurnEnds = Variants.AmericanCheckers.playerTurnEnds
+        }
+    static member AmericanCheckersOptionalJump =
+        {
+            isValidMove = Variants.AmericanCheckers.isValidMove false
+            movePiece = Variants.AmericanCheckers.movePiece false
+            moveSequence = Variants.AmericanCheckers.moveSequence false
             isJump = Variants.AmericanCheckers.isJump
             startingPlayer = Variants.AmericanCheckers.StartingPlayer
             winningPlayer = Variants.AmericanCheckers.winningPlayer
@@ -91,6 +114,13 @@ with
             aiMembers = AiMembers.AmericanCheckers
             pdnMembers = PdnMembers.AmericanCheckers
             apiMembers = ApiMembers.AmericanCheckers
+        }
+    static member AmericanCheckersOptionalJump =
+        {
+            variant = AmericanCheckersOptionalJump
+            aiMembers = AiMembers.AmericanCheckersOptionalJump
+            pdnMembers = PdnMembers.AmericanCheckersOptionalJump
+            apiMembers = ApiMembers.AmericanCheckersOptionalJump
         }
     static member PoolCheckers =
         {

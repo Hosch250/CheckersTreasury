@@ -260,18 +260,19 @@ let internal playerTurnEnds (move :Move) (originalBoard :Board) (currentBoard :B
     pieceWasPromoted ||
     not (lastMoveWasJump && hasValidJump (List.last move) currentBoard)
 
-let public isValidMove startCoord endCoord (board :Board) =
+let public isValidMove (requireJumps :bool) startCoord endCoord (board :Board) =
+    System.Diagnostics.Debug.WriteLine(requireJumps)
     coordExists startCoord &&
     coordExists endCoord &&
     moveIsDiagonal startCoord endCoord &&
     (square startCoord board).IsSome &&
     match abs(startCoord.Row - endCoord.Row) with
-    | 1 -> isValidHop startCoord endCoord board && not <| jumpAvailable (square startCoord board).Value.Player board
+    | 1 -> isValidHop startCoord endCoord board && not <| (requireJumps && jumpAvailable (square startCoord board).Value.Player board)
     | 2 -> isValidJump startCoord endCoord board
     | _ -> false
 
-let public movePiece startCoord endCoord (board :Board) :Option<Board> =
-    match isValidMove startCoord endCoord board with
+let public movePiece requireJumps startCoord endCoord (board :Board) :Option<Board> =
+    match isValidMove requireJumps startCoord endCoord board with
     | false -> None
     | true ->
         match abs(startCoord.Row - endCoord.Row) with
@@ -279,7 +280,7 @@ let public movePiece startCoord endCoord (board :Board) :Option<Board> =
         | 2 -> Some <| jump startCoord endCoord board
         | _ -> None
 
-let rec public moveSequence (coordinates :Coord seq) (board :Option<Board>) =
+let rec public moveSequence requireJumps (coordinates :Coord seq) (board :Option<Board>) =
     let coords = List.ofSeq(coordinates)
 
     match board with
@@ -287,9 +288,9 @@ let rec public moveSequence (coordinates :Coord seq) (board :Option<Board>) =
     | Some b ->
         match coords.Length with
         | b when b >= 3 ->
-            let newBoard = movePiece coords.Head coords.[1] board.Value
-            moveSequence coords.Tail newBoard
-        | _ -> movePiece coords.Head coords.[1] board.Value
+            let newBoard = movePiece requireJumps coords.Head coords.[1] board.Value
+            moveSequence requireJumps coords.Tail newBoard
+        | _ -> movePiece requireJumps coords.Head coords.[1] board.Value
 
 let internal uncheckedMovePiece startCoord endCoord (board :Board) =
     match abs(startCoord.Row - endCoord.Row) with

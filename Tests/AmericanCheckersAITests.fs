@@ -6,7 +6,7 @@ open Xunit
 
 [<Fact>]
 let ``Calculate moves returns correct number of hops``() =
-    let moves = calculateMoves Black Board.defaultBoard
+    let moves = calculateMoves true Black Board.defaultBoard
     Assert.Equal(7, moves.Length)
 
 [<Fact>]
@@ -23,7 +23,7 @@ let ``Calculate moves returns correct number of jumps``() =
             [None; None; None; None; None; None; None; None];
         ];
 
-    let moves = calculateMoves Black board
+    let moves = calculateMoves true Black board
     Assert.Equal(1, moves.Length)
 
 [<Fact>]
@@ -40,7 +40,7 @@ let ``Calculate moves prefers jumps to hops``() =
             [None; None; None; None; None; None; None; None];
         ];
 
-    let moves = calculateMoves Black board
+    let moves = calculateMoves true Black board
     Assert.Equal(1, moves.Length)
 
 [<Fact>]
@@ -57,7 +57,7 @@ let ``Calculate moves prefers jumps to hops 1``() =
             [Piece.whiteChecker; None; Piece.whiteChecker; None; Piece.whiteChecker; None; Piece.whiteChecker; None];
         ];
 
-    let moves = calculateMoves White board
+    let moves = calculateMoves true White board
     Assert.Equal(1, moves.Length)
 
 [<Fact>]

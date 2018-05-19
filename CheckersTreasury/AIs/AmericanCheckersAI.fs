@@ -165,21 +165,21 @@ let getPieceHops coord (board :Board) =
 
     moves |> List.map (fun move -> [coord; offset coord move]) |> hopsFilter
 
-let calculateMoves player (board :Board) =
+let calculateMoves requireJumps player (board :Board) =
     let rec loop jumpAcc hopAcc coord =
         match isPlayerPiece player coord board with
         | true ->
             let newJumpAcc = getPieceJumps coord board @ jumpAcc
-            match newJumpAcc with
-            | [] ->
-                let newHopAcc = getPieceHops coord board @ hopAcc
-                match nextPoint coord Rows Columns with
-                | Some c -> loop newJumpAcc newHopAcc c
-                | None -> newHopAcc
-            | _ ->
+            match newJumpAcc, requireJumps with
+            | b, true when b <> [] ->
                 match nextPoint coord Rows Columns with
                 | Some c -> loop newJumpAcc [] c
                 | None -> newJumpAcc
+            | _ ->
+                let newHopAcc = getPieceHops coord board @ hopAcc
+                match nextPoint coord Rows Columns with
+                | Some c -> loop newJumpAcc newHopAcc c
+                | None -> newJumpAcc @ newHopAcc
         | false ->
             match nextPoint coord Rows Columns with
             | Some c -> loop jumpAcc hopAcc c

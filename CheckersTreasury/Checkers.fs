@@ -3,7 +3,7 @@ type Player = Black | White
 
 type PieceType = Checker | King
 
-type Variant = AmericanCheckers | PoolCheckers
+type Variant = AmericanCheckers | PoolCheckers | AmericanCheckersOptionalJump
 
 type Coord = { Row :int; Column :int }
 

@@ -284,7 +284,6 @@ let isDrawn initialFen (moveHistory :PdnTurn list) =
     let hasReachedPositionThreeTimes = List.exists (fun (_, (values :string list)) -> values.Length >= 3) positionsByTimesReached
 
     let playerWithOneKing = List.skipWhile (fun item -> not (playerHasOneKing item)) fens
-    System.Diagnostics.Debug.WriteLine(playerWithOneKing.Length);
 
     hasReachedPositionThreeTimes || playerWithOneKing.Length = 26
 

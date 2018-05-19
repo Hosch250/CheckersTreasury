@@ -11,6 +11,7 @@ open System
 let getGameVariant variant =
     match variant with
     | AmericanCheckers -> GameVariant.AmericanCheckers
+    | AmericanCheckersOptionalJump -> GameVariant.AmericanCheckersOptionalJump
     | PoolCheckers -> GameVariant.PoolCheckers
 
 let pdnBoard variant =
