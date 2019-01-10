@@ -70,29 +70,35 @@ let rec minimax player currentSearchDepth searchDepth alpha beta (board :Board) 
 
             let rec loop alphaForNode betaForNode (newAlpha :float Option) (newBeta :float Option) move moves =
                 match moves with
-                | [] -> { Alpha = betaForNode; Beta = alphaForNode; Move = move }
+                | [] -> async { return { Alpha = betaForNode; Beta = alphaForNode; Move = move } }
                 | _ ->
-                    let currentMove :Move = moves.Head
-                    match newAlpha.IsNone || newBeta.IsNone || newAlpha.Value < newBeta.Value with
-                    | false ->
-                        match cancellationToken.IsCancellationRequested with
-                        | true -> loop alphaForNode betaForNode newAlpha newBeta move (moves |> List.tail)
-                        | false -> {Alpha = None; Beta = None; Move = []}
-                    | true ->
-                        let newBoard = aiMembers.uncheckedMoveSequence (Seq.ofList currentMove) board
-
-                        let alphaBetaMove = minimax (otherPlayer player) (currentSearchDepth - 1) searchDepth alphaForNode betaForNode newBoard aiMembers cancellationToken
-
-                        match cancellationToken.IsCancellationRequested with
-                        | true -> {Alpha = None; Beta = None; Move = []}
+                    async {
+                        let currentMove :Move = moves.Head
+                        match newAlpha.IsNone || newBeta.IsNone || newAlpha.Value < newBeta.Value with
                         | false ->
-                            match player with
-                            | Black ->
-                                let (newAlphaForNode, newNewAlpha, newMove) = getNewValueAndMove chooseNewAlpha alphaForNode alphaBetaMove.Alpha newAlpha currentMove move
-                                loop newAlphaForNode betaForNode newNewAlpha newBeta newMove (moves |> List.tail)
-                            | White ->
-                                let (newBetaForNode, newNewBeta, newMove) = getNewValueAndMove chooseNewBeta betaForNode alphaBetaMove.Beta newBeta currentMove move
-                                loop alphaForNode newBetaForNode newAlpha newNewBeta newMove (moves |> List.tail)
+                            match cancellationToken.IsCancellationRequested with
+                            | true ->
+                                let! result = (loop alphaForNode betaForNode newAlpha newBeta move (moves |> List.tail))
+                                return result
+                            | false -> return {Alpha = None; Beta = None; Move = []}
+                        | true ->
+                            let newBoard = aiMembers.uncheckedMoveSequence (Seq.ofList currentMove) board
+
+                            let alphaBetaMove = minimax (otherPlayer player) (currentSearchDepth - 1) searchDepth alphaForNode betaForNode newBoard aiMembers cancellationToken
+
+                            match cancellationToken.IsCancellationRequested with
+                            | true -> return {Alpha = None; Beta = None; Move = []}
+                            | false ->
+                                match player with
+                                | Black ->
+                                    let (newAlphaForNode, newNewAlpha, newMove) = getNewValueAndMove chooseNewAlpha alphaForNode alphaBetaMove.Alpha newAlpha currentMove move
+                                    let! result = (loop newAlphaForNode betaForNode newNewAlpha newBeta newMove (moves |> List.tail))
+                                    return result
+                                | White ->
+                                    let (newBetaForNode, newNewBeta, newMove) = getNewValueAndMove chooseNewBeta betaForNode alphaBetaMove.Beta newBeta currentMove move
+                                    let! result = (loop alphaForNode newBetaForNode newAlpha newNewBeta newMove (moves |> List.tail))
+                                    return result
+                    }
 
             let potentialMoves = aiMembers.calculateMoves player board
             match cancellationToken.IsCancellationRequested with
@@ -100,4 +106,4 @@ let rec minimax player currentSearchDepth searchDepth alpha beta (board :Board) 
             | _ ->
                 match potentialMoves.Length, currentSearchDepth = searchDepth with
                 | 1, true -> {Alpha = None; Beta = None; Move = potentialMoves.[0]}
-                | _ -> loop None None alpha beta [] potentialMoves
+                | _ -> Async.RunSynchronously (loop None None alpha beta [] potentialMoves)
