@@ -94,7 +94,8 @@ let internal checkMoveDirection piece startCoord endCoord (board :Board) =
 
 let internal isValidCheckerHop startCoord endCoord (board :Board) =
     let piece = (square startCoord board).Value
-
+    
+    abs (startCoord.Row - endCoord.Row) = 1 &&
     checkMoveDirection piece startCoord endCoord board &&
     (square endCoord board).IsNone
     
